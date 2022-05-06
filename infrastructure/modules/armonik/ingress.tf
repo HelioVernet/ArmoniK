@@ -35,7 +35,7 @@ resource "kubernetes_deployment" "ingress" {
           }
         }
         restart_policy = "Always" # Always, OnFailure, Never
-        # Control plane container
+        # Ingress container
         container {
           name              = var.ingress.name
           image             = var.ingress.tag != "" ? "${var.ingress.image}:${var.ingress.tag}" : var.ingress.image
@@ -211,7 +211,7 @@ resource "kubernetes_deployment" "ingress" {
   }
 }
 
-# Control plane service
+# Ingress service
 resource "kubernetes_service" "ingress" {
   count = var.ingress != null ? 1 : 0
 

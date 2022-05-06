@@ -53,6 +53,9 @@ variable "ingress" {
     node_selector      = any
     tls                = bool
     mtls               = bool
+    server_cert_path   = string
+    server_key_path    = string
+    client_ca_path     = string
   })
 
   validation {
@@ -62,6 +65,11 @@ variable "ingress" {
   validation {
     error_message = "Without TLS, http_port and grpc_port must be different."
     condition     = var.ingress != null ? var.ingress.http_port != var.ingress.grpc_port || var.ingress.tls : true
+  }
+
+  validation {
+    error_message = "Server certificate and Server key must all exist, or all be empty."
+    condition     = var.ingress != null ? (var.server_cert_path == "" && var.server_key_path == "") || (fileexists(var.server_cert_path) && fileexists(var.server_key_path)) : true
   }
 }
 
